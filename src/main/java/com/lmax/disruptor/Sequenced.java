@@ -60,13 +60,28 @@ public interface Sequenced
      * Attempt to claim the next n events in sequence for publishing.  Will return the
      * highest numbered slot if there is at least <code>requiredCapacity</code> slots
      * available.  Have a look at {@link Sequencer#next()} for a description on how to
-     * use this method.
+     * use this method. This method is functionally equivalent to tryNext(n, n).
      *
      * @param n the number of sequences to claim
      * @return the claimed sequence value
      * @throws InsufficientCapacityException
      */
     long tryNext(int n) throws InsufficientCapacityException;
+
+    /**
+     * Attempt to claim the next n events in sequence for publishing.  Will return the
+     * highest numbered slot if there is at least <code>requiredCapacity</code> slots
+     * available. This method can be used to implement a back-off strategy if some
+     * producers are not allowed to fill up the entire ring buffer. The method does not
+     * provide any advantage to the single producer use case.
+     *
+     * @param n the number of sequences to claim
+     * @param requiredCapacity the required number of remaining capacity for the method to succeed.
+     *        Must be &gt;= than n
+     * @return the claimed sequence value
+     * @throws InsufficientCapacityException
+     */
+    long tryNext(int n, int requiredCapacity) throws InsufficientCapacityException;
 
     /**
      * Publishes a sequence. Call when the event has been filled.

@@ -164,9 +164,22 @@ public final class MultiProducerSequencer extends AbstractSequencer
     @Override
     public long tryNext(int n) throws InsufficientCapacityException
     {
+        return tryNext(n, n);
+    }
+
+    /**
+     * @see Sequencer#tryNext(int, int)
+     */
+    @Override
+    public long tryNext(int n, int requiredCapacity) throws InsufficientCapacityException
+    {
         if (n < 1)
         {
             throw new IllegalArgumentException("n must be > 0");
+        }
+        if (n > requiredCapacity)
+        {
+            throw new IllegalArgumentException("n must be <= requiredCapacity");
         }
 
         long current;
@@ -177,7 +190,7 @@ public final class MultiProducerSequencer extends AbstractSequencer
             current = cursor.get();
             next = current + n;
 
-            if (!hasAvailableCapacity(gatingSequences, n, current))
+            if (!hasAvailableCapacity(gatingSequences, requiredCapacity, current))
             {
                 throw InsufficientCapacityException.INSTANCE;
             }

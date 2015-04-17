@@ -161,6 +161,20 @@ public final class SingleProducerSequencer extends SingleProducerSequencerFields
     }
 
     /**
+     * @see Sequencer#tryNext(int, int)
+     */
+    @Override
+    public long tryNext(int n, int requiredCapacity) throws InsufficientCapacityException
+    {
+        if (!hasAvailableCapacity(requiredCapacity))
+        {
+            throw InsufficientCapacityException.INSTANCE;
+        }
+
+        return tryNext(n);
+    }
+
+    /**
      * @see Sequencer#remainingCapacity()
      */
     @Override

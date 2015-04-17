@@ -302,6 +302,21 @@ public final class RingBuffer<E> extends RingBufferFields<E> implements Cursored
     }
 
     /**
+     * The same functionality as {@link RingBuffer#tryNext(int)}, but allows the caller require a larger
+     * free capacity than the claimed one.
+     *
+     * @param n number of slots to claim
+     * @param requiredCapacity number of required free slots
+     * @return sequence number of the highest slot claimed
+     * @throws InsufficientCapacityException if the necessary space in the ring buffer is not available
+     */
+    @Override
+    public long tryNext(int n, int requiredCapacity) throws InsufficientCapacityException
+    {
+        return sequencer.tryNext(n, requiredCapacity);
+    }
+
+    /**
      * Resets the cursor to a specific value.  This can be applied at any time, but it is worth noting
      * that it can cause a data race and should only be used in controlled circumstances.  E.g. during
      * initialisation.
