@@ -180,11 +180,11 @@ task wrapper(type: Wrapper) {
 }
 
 class Version {
-    int major, minor = 0, revision = 0
+    int major, minor = 0, revision = 0, bm = 1
     boolean snapshot
     String stage
 
     String toString() {
-        "$major.$minor.$revision${stage ? '.' + stage : ''}${snapshot ? '-SNAPSHOT' : ''}"
+        "$major.$minor.$revision${stage ? '.' + stage : ''}-bm$bm${snapshot ? '-SNAPSHOT' : ''}"
     }
 }
